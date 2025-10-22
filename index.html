@@ -7,6 +7,35 @@
     
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes slide-up {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes slide-in-left {
+        from { transform: translateX(-20px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slide-in-up {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes bounce-in {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      .animate-fade-in { animation: fade-in 0.6s ease-out; }
+      .animate-slide-up { animation: slide-up 0.6s ease-out; }
+      .animate-slide-in-left { animation: slide-in-left 0.6s ease-out; }
+      .animate-slide-in-up { animation: slide-in-up 0.6s ease-out; }
+      .animate-bounce-in { animation: bounce-in 0.6s ease-out; }
+    </style>
     
     <!-- PDF Generation Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -29,7 +58,7 @@
 }
 </script>
 </head>
-<body class="bg-slate-900 text-white">
+<body class="bg-gray-50 text-gray-900">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -115,8 +144,8 @@
         return (
           <div className="flex items-center space-x-1">
             {[1, 2, 3, 4, 5].map((star) => (
-              <button key={star} type="button" onClick={() => onRatingChange(star)} onMouseEnter={() => setHoverRating(star)} onMouseLeave={() => setHoverRating(0)} className="focus:outline-none">
-                <StarIcon className={`w-6 h-6 transition-colors duration-200 ${(hoverRating || rating) >= star ? 'text-yellow-400' : 'text-slate-600'}`} />
+              <button key={star} type="button" onClick={() => onRatingChange(star)} onMouseEnter={() => setHoverRating(star)} onMouseLeave={() => setHoverRating(0)} className="focus:outline-none transition-transform duration-200 hover:scale-110">
+                <StarIcon className={`w-6 h-6 transition-colors duration-200 ${(hoverRating || rating) >= star ? 'text-yellow-400' : 'text-gray-300'}`} />
               </button>
             ))}
           </div>
@@ -147,17 +176,17 @@
 
         return (
           <div className="relative" ref={dropdownRef}>
-            <input type="text" value={isOpen ? searchTerm : value} onFocus={() => setIsOpen(true)} onChange={e => { if(!isOpen) setIsOpen(true); setSearchTerm(e.target.value); }} placeholder={placeholder || "Search or select..."} className="w-full bg-slate-700 text-white border-slate-600 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500" />
+            <input type="text" value={isOpen ? searchTerm : value} onFocus={() => setIsOpen(true)} onChange={e => { if(!isOpen) setIsOpen(true); setSearchTerm(e.target.value); }} placeholder={placeholder || "Search or select..."} className="w-full bg-white text-gray-900 border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md" />
             {isOpen && (
-              <div className="absolute z-50 w-full -mt-1 bottom-full bg-slate-800 border border-slate-600 rounded-md shadow-lg max-h-60 overflow-auto">
+              <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
                 <ul>
                   {filteredOptions.length > 0 ? (
                     filteredOptions.map(option => (
-                      <li key={option} onClick={() => handleSelect(option)} className="px-4 py-2 text-slate-300 cursor-pointer hover:bg-teal-600 hover:text-white">
+                      <li key={option} onClick={() => handleSelect(option)} className="px-4 py-2 text-gray-700 cursor-pointer hover:bg-blue-50 hover:text-blue-600">
                         {option}
                       </li>
                     ))
-                  ) : ( <li className="px-4 py-2 text-slate-500">No results found</li> )}
+                  ) : ( <li className="px-4 py-2 text-gray-500">No results found</li> )}
                 </ul>
               </div>
             )}
@@ -171,21 +200,21 @@
         const handleDescriptionChange = (e) => onChange({ ...aspect, description: e.target.value });
         const isNoNeed = aspect.status === AspectStatus.NO_NEED;
         return (
-          <section className="p-6 bg-slate-800/60 backdrop-blur-sm border border-slate-700 rounded-xl shadow-lg">
-            <h2 className="text-xl font-bold text-slate-200 mb-4">{aspect.title}</h2>
+          <section className="p-6 bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">{aspect.title}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
               <div className="flex space-x-6">
-                <label className="flex items-center space-x-2 text-slate-300 cursor-pointer">
-                  <input type="radio" name={`aspect-${aspect.id}`} checked={aspect.status === AspectStatus.NEED_IMPROVEMENT} onChange={() => handleStatusChange(AspectStatus.NEED_IMPROVEMENT)} className="form-radio h-5 w-5 text-yellow-400 bg-slate-700 border-slate-600 focus:ring-yellow-500" />
+                <label className="flex items-center space-x-2 text-gray-700 cursor-pointer hover:text-yellow-600 transition-colors">
+                  <input type="radio" name={`aspect-${aspect.id}`} checked={aspect.status === AspectStatus.NEED_IMPROVEMENT} onChange={() => handleStatusChange(AspectStatus.NEED_IMPROVEMENT)} className="form-radio h-5 w-5 text-yellow-500 bg-white border-gray-300 focus:ring-yellow-500" />
                   <span>Need Improvement</span>
                 </label>
-                <label className="flex items-center space-x-2 text-slate-300 cursor-pointer">
-                  <input type="radio" name={`aspect-${aspect.id}`} checked={isNoNeed} onChange={() => handleStatusChange(AspectStatus.NO_NEED)} className="form-radio h-5 w-5 text-green-400 bg-slate-700 border-slate-600 focus:ring-green-500" />
+                <label className="flex items-center space-x-2 text-gray-700 cursor-pointer hover:text-green-600 transition-colors">
+                  <input type="radio" name={`aspect-${aspect.id}`} checked={isNoNeed} onChange={() => handleStatusChange(AspectStatus.NO_NEED)} className="form-radio h-5 w-5 text-green-500 bg-white border-gray-300 focus:ring-green-500" />
                   <span>No Need</span>
                 </label>
               </div>
               <div>
-                <textarea value={aspect.description} onChange={handleDescriptionChange} maxLength={200} placeholder={aspect.id === 'branchCondition' ? 'wallpaper store harus diperbaiki, ac tidak dingin dll' : aspect.id === 'sop' ? 'team branch telat, tidak pakai seragam dll' : aspect.id === 'salesKnowledge' ? 'team tidak tahu tentang biznet dll' : aspect.id === 'atl' ? 'banner tiang tidak ada, spanduk copot di jl xxx. dst' : 'Description (optional)'} disabled={isNoNeed} className="w-full h-24 bg-slate-700 text-white border-slate-600 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 transition-opacity duration-300 disabled:opacity-50 disabled:bg-slate-800 text-sm placeholder:text-xs" />
+                <textarea value={aspect.description} onChange={handleDescriptionChange} maxLength={200} placeholder={aspect.id === 'branchCondition' ? 'wallpaper store harus diperbaiki, ac tidak dingin dll' : aspect.id === 'sop' ? 'team branch telat, tidak pakai seragam dll' : aspect.id === 'salesKnowledge' ? 'team tidak tahu tentang biznet dll' : aspect.id === 'atl' ? 'banner tiang tidak ada, spanduk copot di jl xxx. dst' : 'Description (optional)'} disabled={isNoNeed} className="w-full h-24 bg-white text-gray-900 border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:bg-gray-100 text-sm placeholder:text-gray-400" />
               </div>
             </div>
           </section>
@@ -198,27 +227,27 @@
         const handleInputChange = (e) => onChange({ ...experience, [e.target.name]: e.target.value });
         const RatingRow = ({ label, rating, onRate }) => (
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                <span className="text-slate-300 mb-1 sm:mb-0">{label}</span>
+                <span className="text-gray-700 mb-1 sm:mb-0 font-medium">{label}</span>
                 <StarRating rating={rating} onRatingChange={onRate} />
             </div>
         );
         return (
-          <div className="p-4 bg-slate-900/70 border border-slate-700 rounded-lg relative">
-            {isDeletable && ( <button onClick={() => onDelete(experience.id)} className="absolute top-3 right-3 text-red-500 hover:text-red-600 transition-colors"> <TrashIcon /> </button> )}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <input type="text" name="billingAccount" placeholder="Billing Account" value={experience.billingAccount} onChange={handleInputChange} className="w-full bg-slate-700 text-white border-slate-600 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500" />
-              <input type="text" name="name" placeholder="Customer Name" value={experience.name} onChange={handleInputChange} className="w-full bg-slate-700 text-white border-slate-600 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500" />
+          <div className="p-6 bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative">
+            {isDeletable && ( <button onClick={() => onDelete(experience.id)} className="absolute top-4 right-4 text-red-500 hover:text-red-600 transition-colors hover:scale-110 transform"> <TrashIcon className="w-5 h-5" /> </button> )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <input type="text" name="billingAccount" placeholder="Billing Account" value={experience.billingAccount} onChange={handleInputChange} className="w-full bg-white text-gray-900 border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md" />
+              <input type="text" name="name" placeholder="Customer Name" value={experience.name} onChange={handleInputChange} className="w-full bg-white text-gray-900 border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md" />
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <RatingRow label="Kecepatan Internet" rating={experience.ratings.speed} onRate={val => handleRatingChange('speed', val)} />
               <RatingRow label="Kestabilan Koneksi" rating={experience.ratings.stability} onRate={val => handleRatingChange('stability', val)} />
               <RatingRow label="Layanan Pelanggan" rating={experience.ratings.support} onRate={val => handleRatingChange('support', val)} />
               <RatingRow label="Harga dan Kesesuaian" rating={experience.ratings.price} onRate={val => handleRatingChange('price', val)} />
               <RatingRow label="Kepuasan Keseluruhan" rating={experience.ratings.overall} onRate={val => handleRatingChange('overall', val)} />
             </div>
-            <div className="mt-4">
-              <h4 className="font-semibold text-slate-300 mb-1">Summary:</h4>
-              <p className="text-sm text-slate-400 bg-slate-800 p-3 rounded-md min-h-[6rem]">{experience.summary}</p>
+            <div className="mt-6">
+              <h4 className="font-semibold text-gray-800 mb-2">Summary:</h4>
+              <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg min-h-[6rem] border border-gray-200">{experience.summary}</p>
             </div>
           </div>
         );
@@ -268,34 +297,34 @@
           }
           setIsCameraOn(false);
         };
-        
+
         return (
-          <section className="mt-8 p-6 bg-slate-800/60 backdrop-blur-sm border border-slate-700 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-sky-400 mb-4">Image Visitation</h2>
+          <section className="p-6 bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Image Visitation</h2>
             {isCameraOn && (
-              <div className="mb-4">
-                <video ref={videoRef} autoPlay className="w-full rounded-lg mb-2" />
+              <div className="mb-6">
+                <video ref={videoRef} autoPlay className="w-full rounded-xl mb-4 shadow-lg" />
                 <div className="flex justify-center space-x-4">
-                  <button onClick={takePicture} className="px-4 py-2 bg-green-500 rounded-lg text-white font-semibold">Take Picture</button>
-                  <button onClick={closeCamera} className="px-4 py-2 bg-red-500 rounded-lg text-white font-semibold">Close Camera</button>
+                  <button onClick={takePicture} className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">Take Picture</button>
+                  <button onClick={closeCamera} className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">Close Camera</button>
                 </div>
                 <canvas ref={canvasRef} className="hidden" />
               </div>
             )}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
               {images.map(image => (
                 <div key={image.id} className="relative group">
-                  <img src={image.src} alt="Visitation" className="w-full h-32 object-cover rounded-lg"/>
-                  <button onClick={() => removeImage(image.id)} className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"> <TrashIcon /> </button>
+                  <img src={image.src} alt="Visitation" className="w-full h-32 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"/>
+                  <button onClick={() => removeImage(image.id)} className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 transform"> <TrashIcon className="w-4 h-4" /> </button>
                 </div>
               ))}
             </div>
             <div className="text-center relative">
-              <button onClick={() => setShowOptions(!showOptions)} className="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300"> Upload Image </button>
+              <button onClick={() => setShowOptions(!showOptions)} className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 hover:scale-105 transform"> Upload Image </button>
               {showOptions && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-slate-700 rounded-lg shadow-lg border border-slate-600 p-2 flex flex-col space-y-2 z-20">
-                  <button onClick={() => fileInputRef.current?.click()} className="flex items-center justify-center w-full px-4 py-2 text-left text-sm text-slate-200 hover:bg-slate-600 rounded-md"> <UploadIcon /> <span className="ml-2">From Album</span> </button>
-                  <button onClick={openCamera} className="flex items-center justify-center w-full px-4 py-2 text-left text-sm text-slate-200 hover:bg-slate-600 rounded-md"> <CameraIcon /> <span className="ml-2">Use Camera</span> </button>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 p-2 flex flex-col space-y-2 z-20">
+                  <button onClick={() => fileInputRef.current?.click()} className="flex items-center justify-center w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-blue-50 rounded-md transition-colors"> <UploadIcon className="w-4 h-4 mr-2" /> <span>From Album</span> </button>
+                  <button onClick={openCamera} className="flex items-center justify-center w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-blue-50 rounded-md transition-colors"> <CameraIcon className="w-4 h-4 mr-2" /> <span>Use Camera</span> </button>
                 </div>
               )}
               <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden"/>
@@ -391,12 +420,14 @@
         const visitorOptions = ['Dedi Riyanto', 'Visitor A', 'Visitor B'];
 
         const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-        const [visitor, setVisitor] = useState(visitorOptions[0]);
-        const [branch, setBranch] = useState(branchOptions[0]);
+        const [visitor, setVisitor] = useState('');
+        const [branch, setBranch] = useState('');
         const [aspects, setAspects] = useState(initialAspects);
         const [experiences, setExperiences] = useState([]);
         const [images, setImages] = useState([]);
         const [isSubmitting, setIsSubmitting] = useState(false);
+        const [activeTab, setActiveTab] = useState('basic');
+        const [showSuccessPopup, setShowSuccessPopup] = useState(false);
         const reportRef = useRef(null);
 
         const handleAspectChange = useCallback((updatedAspect) => {
@@ -432,73 +463,138 @@
               const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [canvas.width, canvas.height] });
               pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
               pdf.save(`Visitation_Report_${branch.replace(/\s/g, '_')}_${date}.pdf`);
-              
+
               const subject = `Visitation Report: ${branch} - ${date}`;
               const body = `Hello,\n\nPlease find the attached visitation report for ${branch} conducted on ${date} by ${visitor}.\n\nBest regards.`;
               window.location.href = `mailto:dedi_riyanto@biznetnetworks.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+              setShowSuccessPopup(true);
+              setTimeout(() => setShowSuccessPopup(false), 3000);
 
             } catch (error) { console.error("Error generating PDF:", error); alert("Failed to generate PDF. Please try again."); }
           }
           setIsSubmitting(false);
         };
         
+        const tabs = [
+          { id: 'basic', label: 'Basic Info', icon: '📋' },
+          { id: 'aspects', label: 'Aspects', icon: '🔍' },
+          { id: 'experience', label: 'Customer Experience', icon: '⭐' },
+          { id: 'images', label: 'Images', icon: '📷' }
+        ];
+
         return (
-          <div className="min-h-screen bg-gradient-to-b from-[#1e3a8a] via-[#3b82f6] to-[#60a5fa] p-2 sm:p-4 lg:p-6 font-sans">
-            <div className="max-w-4xl mx-auto">
-              <header className="text-center mb-8">
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-sky-400">
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-2 sm:p-4 lg:p-6 font-sans">
+            <div className="max-w-5xl mx-auto">
+              <header className="text-center mb-8 animate-fade-in">
+                <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
                   Automatic Visitation Report
                 </h1>
-                <p className="text-slate-400 mt-2">A modern solution for streamlined field reporting.</p>
+                <p className="text-gray-600 text-lg">A modern solution for streamlined field reporting.</p>
               </header>
-              
-              <div className="space-y-8">
-                  <section className="p-6 bg-slate-800/60 backdrop-blur-sm border border-slate-700 rounded-xl shadow-lg">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          <div>
-                              <label htmlFor="date" className="block text-sm font-medium text-slate-300 mb-2">Date</label>
-                              <input type="date" id="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-slate-700 text-white border-slate-600 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"/>
-                          </div>
-                          <div>
-                              <label htmlFor="visitor" className="block text-sm font-medium text-slate-300 mb-2">Visitor Name</label>
-                              <SearchableDropdown options={visitorOptions} value={visitor} onChange={setVisitor} placeholder="Select visitor..."/>
-                          </div>
-                          <div>
-                              <label htmlFor="branch" className="block text-sm font-medium text-slate-300 mb-2">Branch Name</label>
-                              <SearchableDropdown options={branchOptions} value={branch} onChange={setBranch} placeholder="Select branch..."/>
-                          </div>
-                      </div>
-                  </section>
-                  
-                  {aspects.map(aspect => <AspectInput key={aspect.id} aspect={aspect} onChange={handleAspectChange} />)}
 
-                  <section className="p-6 bg-slate-800/60 backdrop-blur-sm border border-slate-700 rounded-xl shadow-lg">
-                      <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-sky-400">Customer Experience</h2>
-                        <button onClick={addExperience} className="flex items-center px-1 py-1 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300">
-                            <PlusIcon className="mr-1" /> Add Visitation
+              <div className="bg-white rounded-2xl shadow-xl overflow-hidden animate-slide-up">
+                <div className="flex border-b border-gray-200">
+                  {tabs.map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex-1 py-4 px-2 text-center font-medium transition-all duration-300 ${
+                        activeTab === tab.id
+                          ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+                          : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span className="text-lg mb-1 block">{tab.icon}</span>
+                      <span className="text-sm">{tab.label}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="p-6">
+                  {activeTab === 'basic' && (
+                    <div className="animate-fade-in">
+                      <h2 className="text-2xl font-bold text-gray-800 mb-6">Basic Information</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="animate-slide-in-left">
+                          <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                          <input type="date" id="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-white text-gray-900 border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md"/>
+                        </div>
+                        <div className="animate-slide-in-left" style={{animationDelay: '0.1s'}}>
+                          <label htmlFor="visitor" className="block text-sm font-medium text-gray-700 mb-2">Visitor Name</label>
+                          <SearchableDropdown options={visitorOptions} value={visitor} onChange={setVisitor} placeholder="Select visitor..."/>
+                        </div>
+                        <div className="animate-slide-in-left" style={{animationDelay: '0.2s'}}>
+                          <label htmlFor="branch" className="block text-sm font-medium text-gray-700 mb-2">Branch Name</label>
+                          <SearchableDropdown options={branchOptions} value={branch} onChange={setBranch} placeholder="Select branch..."/>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'aspects' && (
+                    <div className="animate-fade-in">
+                      <h2 className="text-2xl font-bold text-gray-800 mb-6">Branch Aspects</h2>
+                      <div className="space-y-6">
+                        {aspects.map((aspect, index) => (
+                          <div key={aspect.id} className="animate-slide-in-up" style={{animationDelay: `${index * 0.1}s`}}>
+                            <AspectInput aspect={aspect} onChange={handleAspectChange} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'experience' && (
+                    <div className="animate-fade-in">
+                      <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-bold text-gray-800">Customer Experience</h2>
+                        <button onClick={addExperience} className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">
+                          <PlusIcon className="mr-2 w-4 h-4" /> Add Visitation
                         </button>
                       </div>
                       <div className="space-y-6">
-                          {experiences.map((exp, index) => (
-                              <CustomerExperienceCard key={exp.id} experience={exp} onChange={handleExperienceChange} onDelete={deleteExperience} isDeletable={index > 0} />
-                          ))}
+                        {experiences.map((exp, index) => (
+                          <div key={exp.id} className="animate-slide-in-up" style={{animationDelay: `${index * 0.1}s`}}>
+                            <CustomerExperienceCard experience={exp} onChange={handleExperienceChange} onDelete={deleteExperience} isDeletable={index > 0} />
+                          </div>
+                        ))}
                       </div>
-                  </section>
+                    </div>
+                  )}
 
-                  <ImageUpload images={images} onImagesChange={setImages} />
+                  {activeTab === 'images' && (
+                    <div className="animate-fade-in">
+                      <ImageUpload images={images} onImagesChange={setImages} />
+                    </div>
+                  )}
+                </div>
 
-                  <div className="mt-8 text-center">
-                      <button onClick={handleSubmit} disabled={isSubmitting} className="px-10 py-4 text-lg font-bold text-white bg-gradient-to-r from-teal-500 to-sky-600 rounded-lg shadow-xl hover:scale-105 transform transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100">
-                          {isSubmitting ? 'Generating Report...' : 'Submit Report'}
-                      </button>
+                <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                  <div className="text-center">
+                    <button onClick={handleSubmit} disabled={isSubmitting} className="px-8 py-3 text-lg font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transform transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100">
+                      {isSubmitting ? 'Generating Report...' : 'Submit Report'}
+                    </button>
                   </div>
+                </div>
               </div>
-              
-              <div style={{ position: 'absolute', left: '-9999px', top: 0, zIndex: -1 }}>
-                  <div ref={reportRef}>
-                      <PdfReportTemplate date={date} visitor={visitor} branch={branch} aspects={aspects} experiences={experiences} images={images} />
+
+              {showSuccessPopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
+                  <div className="bg-white rounded-2xl p-8 shadow-2xl animate-bounce-in">
+                    <div className="text-center">
+                      <div className="text-6xl mb-4">🎉</div>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-2">Thank You!</h3>
+                      <p className="text-gray-600">Your report has been submitted successfully!</p>
+                    </div>
                   </div>
+                </div>
+              )}
+
+              <div style={{ position: 'absolute', left: '-9999px', top: 0, zIndex: -1 }}>
+                <div ref={reportRef}>
+                  <PdfReportTemplate date={date} visitor={visitor} branch={branch} aspects={aspects} experiences={experiences} images={images} />
+                </div>
               </div>
             </div>
           </div>
