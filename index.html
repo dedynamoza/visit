@@ -8,6 +8,12 @@
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
       @keyframes fade-in {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -29,6 +35,14 @@
         50% { transform: scale(1.05); }
         70% { transform: scale(0.9); }
         100% { transform: scale(1); opacity: 1; }
+      }
+      @keyframes slide-in {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
       }
       .animate-fade-in { animation: fade-in 0.6s ease-out; }
       .animate-slide-up { animation: slide-up 0.6s ease-out; }
@@ -78,35 +92,35 @@
         if (ratings.every(r => r === 0)) {
           return "Please provide ratings to generate a summary.";
         }
-        
+
         let text = [];
         const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
 
-        if (speed <= 2) text.push("Pelanggan merasa kecepatan internet sangat lambat dan sering mengganggu aktivitas online.");
+        if (speed <= 2) text.push("<strong>Pelanggan merasa kecepatan internet sangat lambat dan sering mengganggu aktivitas online.</strong>");
         else if (speed === 3) text.push("Kecepatan internet dirasa cukup baik, namun kadang melambat di jam tertentu.");
         else text.push("Kecepatan internet dinilai cepat dan memuaskan pelanggan.");
-          
-        if (stability <= 2) text.push("Koneksi sering tidak stabil atau terputus.");
+
+        if (stability <= 2) text.push("<strong>Koneksi sering tidak stabil atau terputus.</strong>");
         else if (stability === 3) text.push("Koneksi cukup stabil, meskipun kadang mengalami gangguan kecil.");
         else text.push("Koneksi internet sangat stabil tanpa gangguan berarti.");
-          
-        if (support <= 2) text.push("Layanan pelanggan dinilai lambat dan kurang membantu dalam menyelesaikan masalah.");
+
+        if (support <= 2) text.push("<strong>Layanan pelanggan dinilai lambat dan kurang membantu dalam menyelesaikan masalah.</strong>");
         else if (support === 3) text.push("Layanan pelanggan cukup responsif, meski masih bisa ditingkatkan.");
         else text.push("Layanan pelanggan cepat, ramah, dan sangat membantu.");
-          
-        if (price <= 2) text.push("Harga dianggap tidak sebanding dengan kualitas layanan yang diterima.");
+
+        if (price <= 2) text.push("<strong>Harga dianggap tidak sebanding dengan kualitas layanan yang diterima.</strong>");
         else if (price === 3) text.push("Harga dirasa cukup sebanding dengan kualitas yang diberikan.");
         else text.push("Harga dinilai sangat sepadan bahkan di bawah ekspektasi pelanggan.");
-          
-        if (overall <= 2) text.push("Secara keseluruhan pelanggan merasa tidak puas dan membutuhkan peningkatan signifikan.");
+
+        if (overall <= 2) text.push("<strong>Secara keseluruhan pelanggan merasa tidak puas dan membutuhkan peningkatan signifikan.</strong>");
         else if (overall === 3) text.push("Secara umum pelanggan cukup puas namun berharap peningkatan di beberapa aspek.");
         else text.push("Pelanggan merasa sangat puas dan kemungkinan besar akan merekomendasikan layanan ini.");
-          
+
         let tone = "";
-        if (avg <= 2.5) tone = "Kesimpulan: Tingkat kepuasan pelanggan sangat rendah. Disarankan dilakukan tindak lanjut segera oleh tim teknis dan customer care.";
+        if (avg <= 2.5) tone = "<strong>Kesimpulan: Tingkat kepuasan pelanggan sangat rendah. Disarankan dilakukan tindak lanjut segera oleh tim teknis dan customer care.</strong>";
         else if (avg < 4) tone = "Kesimpulan: Pelanggan cukup puas, namun ada beberapa aspek yang perlu perbaikan agar pengalaman lebih konsisten.";
         else tone = "Kesimpulan: Pelanggan sangat puas dengan layanan internet secara keseluruhan.";
-          
+
         return text.join(" ") + " " + tone;
       }
 
@@ -247,7 +261,7 @@
             </div>
             <div className="mt-6">
               <h4 className="font-semibold text-gray-800 mb-2">Summary:</h4>
-              <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg min-h-[6rem] border border-gray-200">{experience.summary}</p>
+              <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg min-h-[6rem] border border-gray-200" dangerouslySetInnerHTML={{ __html: experience.summary }}></p>
             </div>
           </div>
         );
@@ -416,8 +430,44 @@
           { id: 'salesKnowledge', title: 'Biznet Knowledge', status: AspectStatus.UNSELECTED, description: '' },
           { id: 'atl', title: 'Above The Line', status: AspectStatus.UNSELECTED, description: '' },
         ];
-        const branchOptions = ['OKI Kayu Agung', 'Branch A', 'Branch B', 'Branch C'];
-        const visitorOptions = ['Dedi Riyanto', 'Visitor A', 'Visitor B'];
+        const branchOptions = [
+  'Branch Metro Hadimulyo Barat',
+  'Branch Bandar Lampung Tanjung Senang',
+  'Branch Lampung Tengah Bandar Jaya',
+  'Branch Lampung Selatan Kalianda',
+  'Branch Bandar Lampung Rawa Laut',
+  'Branch Bandar Lampung Rajabasa',
+  'Branch Mesuji Umbulan Tedunggeram',
+  'Branch Bandar Bandar Lampung Campang Raya',
+  'Branch Tulang Bawang Barat Banjar Agung',
+  'Branch Tulang Bawang Barat Menggala',
+  'Branch Jambi Kenali Asam Bawah',
+  'Branch Jambi Kenali Besar',
+  'Branch Jambi Thehok',
+  'Branch Bengkulu Jembatan Kecil',
+  'Branch Muaro Jambi Sengeti',
+  'Branch Tanjung Jabung Barat Kuala Tungkal',
+  'Branch Tanjung Jabung Barat Merlung',
+  'Branch Banyuasin Pangkalan Balai',
+  'Branch Banyuasin Betung',
+  'Branch Banyuasin Sungsang',
+  'Branch Bangka Sungai Liat',
+  'Branch Bangka Barat Kelapa',
+  'Branch Bangka Barat Muntok',
+  'Branch Musi Banyausin Bayung Lecir',
+  'Branch Musi Banyuasin Pangkalan Gresik',
+  'Branch Musi Banyuasin Sungai Lilin',
+  'Branch Ogan Komering Ilir Kayu Agung',
+  'Branch Ogan Komering Ilir Tugu Mulyo',
+  'Branch Palembang 8 Ulu',
+  'Branch Palembang Kalidoni',
+  'Branch Palembang Karya Jaya',
+  'Branch Palembang Sekip Jaya',
+  'Branch Palembang Sukamaju',
+  'Branch Palembang Sukodadi',
+  'Branch Pangkal Pinang Batin Tikal'
+];
+        const visitorOptions = ['Dedi Riyanto', 'Made Marsha Bayu Kresna', 'Piscesco Heyziputra'];
 
         const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
         const [visitor, setVisitor] = useState('');
@@ -441,10 +491,36 @@
         const addExperience = () => {
           const newExperience = { id: `exp-${Date.now()}`, billingAccount: '', name: '', ratings: { speed: 0, stability: 0, support: 0, price: 0, overall: 0 }, summary: 'Please provide ratings to generate a summary.' };
           setExperiences(prev => [...prev, newExperience]);
+          // Add click effect
+          const button = document.activeElement;
+          if (button) {
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => button.style.transform = '', 150);
+          }
         };
         const deleteExperience = (id) => {
           if (experiences.length > 1) {
               setExperiences(prev => prev.filter(exp => exp.id !== id));
+              // Show notification
+              const notification = document.createElement('div');
+              notification.textContent = 'Visitation deleted';
+              notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ef4444;
+                color: white;
+                padding: 12px 16px;
+                border-radius: 8px;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slide-in 0.3s ease-out;
+              `;
+              document.body.appendChild(notification);
+              setTimeout(() => {
+                notification.style.animation = 'fade-out 0.3s ease-out';
+                setTimeout(() => document.body.removeChild(notification), 300);
+              }, 2000);
           } else {
               alert('At least one customer visitation is required.');
           }
@@ -452,7 +528,24 @@
         
         useEffect(() => { if(experiences.length === 0) { addExperience(); } }, []);
 
+        const validateForm = () => {
+          const errors = [];
+          if (!date) errors.push('Date');
+          if (!visitor) errors.push('Visitor Name');
+          if (!branch) errors.push('Branch Name');
+          if (aspects.some(a => a.status === AspectStatus.UNSELECTED)) errors.push('all Aspects');
+          if (experiences.some(e => !e.billingAccount || !e.name || Object.values(e.ratings).some(r => r === 0))) errors.push('all Customer Experience fields');
+          if (images.length === 0) errors.push('at least one Image');
+          return errors;
+        };
+
         const handleSubmit = async () => {
+          const errors = validateForm();
+          if (errors.length > 0) {
+            alert(`Please fill in the following sections: ${errors.join(', ')}`);
+            return;
+          }
+
           setIsSubmitting(true);
           await new Promise(resolve => setTimeout(resolve, 100));
           if (reportRef.current) {
@@ -477,8 +570,8 @@
         };
         
         const tabs = [
-          { id: 'basic', label: 'Basic Info', icon: '📋' },
-          { id: 'aspects', label: 'Aspects', icon: '🔍' },
+          { id: 'basic', label: 'Visitor Information', icon: '📋' },
+          { id: 'aspects', label: 'Internal Experience', icon: '🔍' },
           { id: 'experience', label: 'Customer Experience', icon: '⭐' },
           { id: 'images', label: 'Images', icon: '📷' }
         ];
@@ -490,7 +583,7 @@
                 <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
                   Automatic Visitation Report
                 </h1>
-                <p className="text-gray-600 text-lg">A modern solution for streamlined field reporting.</p>
+                <p className="text-gray-600 text-lg">Every visit brings new insights.</p>
               </header>
 
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden animate-slide-up">
@@ -550,7 +643,7 @@
                       <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl font-bold text-gray-800">Customer Experience</h2>
                         <button onClick={addExperience} className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">
-                          <PlusIcon className="mr-2 w-4 h-4" /> Add Visitation
+                          Add Visitation
                         </button>
                       </div>
                       <div className="space-y-6">
