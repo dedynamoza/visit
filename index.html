@@ -393,6 +393,12 @@
                         </thead>
                         <tbody>
                             <tr>
+                                <td colSpan="3" style={{ border: '1px solid black', padding: '8px', fontWeight: 'bold' }}>Billing Account: {exp.billingAccount}</td>
+                            </tr>
+                            <tr>
+                                <td colSpan="3" style={{ border: '1px solid black', padding: '8px', fontWeight: 'bold' }}>Customer Name: {exp.name}</td>
+                            </tr>
+                            <tr>
                                 <td style={{ border: '1px solid black', padding: '8px' }}>Kecepatan Internet</td>
                                 <td style={{ border: '1px solid black', padding: '8px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.speed)}</td>
                                 <td style={{ border: '1px solid black', padding: '8px', verticalAlign: 'top', textAlign: 'left' }} rowSpan="5">{exp.summary}</td>
@@ -558,7 +564,7 @@
               pdf.save(`Visitation_Report_${branch.replace(/\s/g, '_')}_${date}.pdf`);
 
               const subject = `Visitation Report: ${branch} - ${date}`;
-              const body = `Hello,\n\nPlease find the attached visitation report for ${branch} conducted on ${date} by ${visitor}.\n\nBest regards.`;
+              const body = `Dear Pak Dedi,\n\nTerlampir report kunjungan saya ke ${branch} yang dilakukan pada ${date} oleh ${visitor}.\n\nBest regards.`;
               window.location.href = `mailto:dedi_riyanto@biznetnetworks.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
               setShowSuccessPopup(true);
