@@ -96,28 +96,28 @@
         let text = [];
         const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
 
-        if (speed <= 2) text.push("<b>Pelanggan merasa kecepatan internet sangat lambat dan sering mengganggu aktivitas online.</b>");
+        if (speed <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Pelanggan merasa kecepatan internet sangat lambat dan sering mengganggu aktivitas online.</span>");
         else if (speed === 3) text.push("Kecepatan internet dirasa cukup baik, namun kadang melambat di jam tertentu.");
         else text.push("Kecepatan internet dinilai cepat dan memuaskan pelanggan.");
 
-        if (stability <= 2) text.push("<b>Koneksi sering tidak stabil atau terputus.</b>");
+        if (stability <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Koneksi sering tidak stabil atau terputus.</span>");
         else if (stability === 3) text.push("Koneksi cukup stabil, meskipun kadang mengalami gangguan kecil.");
         else text.push("Koneksi internet sangat stabil tanpa gangguan berarti.");
 
-        if (support <= 2) text.push("<b>Layanan pelanggan dinilai lambat dan kurang membantu dalam menyelesaikan masalah.</b>");
+        if (support <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Layanan pelanggan dinilai lambat dan kurang membantu dalam menyelesaikan masalah.</span>");
         else if (support === 3) text.push("Layanan pelanggan cukup responsif, meski masih bisa ditingkatkan.");
         else text.push("Layanan pelanggan cepat, ramah, dan sangat membantu.");
 
-        if (price <= 2) text.push("<b>Harga dianggap tidak sebanding dengan kualitas layanan yang diterima.</b>");
+        if (price <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Harga dianggap tidak sebanding dengan kualitas layanan yang diterima.</span>");
         else if (price === 3) text.push("Harga dirasa cukup sebanding dengan kualitas yang diberikan.");
         else text.push("Harga dinilai sangat sepadan bahkan di bawah ekspektasi pelanggan.");
 
-        if (overall <= 2) text.push("<b>Secara keseluruhan pelanggan merasa tidak puas dan membutuhkan peningkatan signifikan.</b>");
+        if (overall <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Secara keseluruhan pelanggan merasa tidak puas dan membutuhkan peningkatan signifikan.</span>");
         else if (overall === 3) text.push("Secara umum pelanggan cukup puas namun berharap peningkatan di beberapa aspek.");
         else text.push("Pelanggan merasa sangat puas dan kemungkinan besar akan merekomendasikan layanan ini.");
 
         let tone = "";
-        if (avg <= 2.5) tone = "<b>Kesimpulan: Tingkat kepuasan pelanggan sangat rendah. Disarankan dilakukan tindak lanjut segera oleh tim teknis dan customer care.</b>";
+        if (avg <= 2.5) tone = "<span style=\"font-weight: bold; color: red;\">Kesimpulan: Tingkat kepuasan pelanggan sangat rendah. Disarankan dilakukan tindak lanjut segera oleh tim teknis dan customer care.</span>";
         else if (avg < 4) tone = "Kesimpulan: Pelanggan cukup puas, namun ada beberapa aspek yang perlu perbaikan agar pengalaman lebih konsisten.";
         else tone = "Kesimpulan: Pelanggan sangat puas dengan layanan internet secara keseluruhan.";
 
@@ -239,6 +239,7 @@
       const CustomerExperienceCard = ({ experience, onChange, onDelete, isDeletable }) => {
         const handleRatingChange = (category, value) => onChange({ ...experience, ratings: { ...experience.ratings, [category]: value }});
         const handleInputChange = (e) => onChange({ ...experience, [e.target.name]: e.target.value });
+        const handleImagesChange = (newImages) => onChange({ ...experience, images: newImages });
         const RatingRow = ({ label, rating, onRate }) => (
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <span className="text-gray-700 mb-1 sm:mb-0 font-medium">{label}</span>
@@ -262,6 +263,11 @@
             <div className="mt-6">
               <h4 className="font-semibold text-gray-800 mb-2">Summary:</h4>
               <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg min-h-[6rem] border border-gray-200" dangerouslySetInnerHTML={{ __html: experience.summary }}></p>
+            </div>
+            <div className="mt-6">
+              <div className="p-4 bg-white border border-gray-200 rounded-xl shadow-sm">
+                <ImageUpload images={experience.images} onImagesChange={handleImagesChange} />
+              </div>
             </div>
           </div>
         );
@@ -348,7 +354,7 @@
       };
       
       // --- PDF Report Template Component ---
-      const PdfReportTemplate = ({ date, visitor, branch, aspects, experiences, images }) => {
+      const PdfReportTemplate = ({ date, visitor, branch, aspects, experiences }) => {
         const renderStars = (rating) => '★'.repeat(rating) + '☆'.repeat(5 - rating);
         return (
             <div style={{ width: '800px', backgroundColor: 'white', color: 'black', padding: '40px', fontFamily: 'Arial, sans-serif', border: '1px solid #333' }}>
@@ -379,7 +385,7 @@
                     </tbody>
                 </table>
 
-                {experiences.map((exp, index) => (
+                {experiences.map((exp) => (
                     <table key={exp.id} style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid black', marginBottom: '20px' }}>
                         <thead>
                             <tr>
@@ -398,18 +404,13 @@
                             <tr>
                                 <td colSpan="3" style={{ border: '1px solid black', padding: '4px', fontWeight: 'bold' }}>Customer Name: {exp.name}</td>
                             </tr>
-                            <tr>
-                                <td colSpan="3" style={{ border: '1px solid black', padding: '4px' }}>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', pageBreakInside: 'avoid' }}>
-                                        {images.map(img => (
-                                            <div key={img.id}>
-                                                <p style={{marginBottom: '5px', fontWeight: 'bold'}}>Image Visitation</p>
-                                                <img src={img.src} alt="Visitation" style={{ width: '100px', height: 'auto', border: '1px solid #CCC' }}/>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </td>
-                            </tr>
+                            {exp.images.map((image, imgIndex) => (
+                                <tr key={imgIndex}>
+                                    <td colSpan="3" style={{ border: '1px solid black', padding: '4px' }}>
+                                        <img src={image.src} alt={`Visitation ${imgIndex + 1}`} style={{ width: '100px', height: 'auto', border: '1px solid #CCC' }}/>
+                                    </td>
+                                </tr>
+                            ))}
                             <tr>
                                 <td style={{ border: '1px solid black', padding: '4px' }}>Kecepatan Internet</td>
                                 <td style={{ border: '1px solid black', padding: '4px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.speed)}</td>
@@ -437,7 +438,7 @@
           { id: 'branchCondition', title: 'Branch Condition', status: AspectStatus.UNSELECTED, description: '' },
           { id: 'sop', title: 'Standart Operation Procedure', status: AspectStatus.UNSELECTED, description: '' },
           { id: 'salesKnowledge', title: 'Biznet Knowledge', status: AspectStatus.UNSELECTED, description: '' },
-          { id: 'atl', title: 'Above The Line', status: AspectStatus.UNSELECTED, description: '' },
+          { id: 'atl', title: 'Branding', status: AspectStatus.UNSELECTED, description: '' },
         ];
         const branchOptions = [
   'Branch Metro Hadimulyo Barat',
@@ -483,7 +484,6 @@
         const [branch, setBranch] = useState('');
         const [aspects, setAspects] = useState(initialAspects);
         const [experiences, setExperiences] = useState([]);
-        const [images, setImages] = useState([]);
         const [isSubmitting, setIsSubmitting] = useState(false);
         const [activeTab, setActiveTab] = useState('basic');
         const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -496,28 +496,19 @@
             case 'aspects':
               return aspects.every(a => a.status !== AspectStatus.UNSELECTED);
             case 'experience':
-              return experiences.every(e => e.billingAccount && e.name && Object.values(e.ratings).every(r => r > 0));
-            case 'images':
-              return images.length > 0;
+              return experiences.every(e => e.billingAccount && e.name && Object.values(e.ratings).every(r => r > 0) && e.images.length > 0);
             default:
               return false;
           }
         };
 
         const getNextTab = (currentTab) => {
-          const tabsOrder = ['basic', 'aspects', 'experience', 'images'];
+          const tabsOrder = ['basic', 'aspects', 'experience'];
           const currentIndex = tabsOrder.indexOf(currentTab);
           return currentIndex < tabsOrder.length - 1 ? tabsOrder[currentIndex + 1] : null;
         };
 
-        useEffect(() => {
-          if (activeTab === 'basic' && isTabComplete(activeTab)) {
-            const nextTab = getNextTab(activeTab);
-            if (nextTab) {
-              setActiveTab(nextTab);
-            }
-          }
-        }, [date, visitor, branch, aspects, experiences, images, activeTab]);
+
 
         const handleAspectChange = useCallback((updatedAspect) => {
           setAspects(prev => prev.map(a => a.id === updatedAspect.id ? updatedAspect : a));
@@ -528,7 +519,7 @@
           setExperiences(prev => prev.map(exp => exp.id === updatedExperience.id ? { ...updatedExperience, summary } : exp));
         }, []);
         const addExperience = () => {
-          const newExperience = { id: `exp-${Date.now()}`, billingAccount: '', name: '', ratings: { speed: 0, stability: 0, support: 0, price: 0, overall: 0 }, summary: 'Please provide ratings to generate a summary.' };
+          const newExperience = { id: `exp-${Date.now()}`, billingAccount: '', name: '', ratings: { speed: 0, stability: 0, support: 0, price: 0, overall: 0 }, summary: 'Please provide ratings to generate a summary.', images: [] };
           setExperiences(prev => [...prev, newExperience]);
           // Add click effect
           const button = document.activeElement;
@@ -574,7 +565,7 @@
           if (!branch) errors.push('Branch Name');
           if (aspects.some(a => a.status === AspectStatus.UNSELECTED)) errors.push('all Aspects');
           if (experiences.some(e => !e.billingAccount || !e.name || Object.values(e.ratings).some(r => r === 0))) errors.push('all Customer Experience fields');
-          if (images.length === 0) errors.push('at least one Image');
+          if (experiences.some(e => e.images.length === 0)) errors.push('at least one Image per Customer Experience');
           return errors;
         };
 
@@ -609,7 +600,6 @@
                 setBranch('');
                 setAspects(initialAspects);
                 setExperiences([]);
-                setImages([]);
                 setActiveTab('basic');
                 // Add initial experience
                 addExperience();
@@ -623,8 +613,7 @@
         const tabs = [
           { id: 'basic', label: 'Visitor Information', icon: '📋' },
           { id: 'aspects', label: 'Internal Experience', icon: '🔍' },
-          { id: 'experience', label: 'Customer Experience', icon: '⭐' },
-          { id: 'images', label: 'Images', icon: '📷' }
+          { id: 'experience', label: 'Customer Experience', icon: '⭐' }
         ];
 
         return (
@@ -706,12 +695,6 @@
                       </div>
                     </div>
                   )}
-
-                  {activeTab === 'images' && (
-                    <div className="animate-fade-in">
-                      <ImageUpload images={images} onImagesChange={setImages} />
-                    </div>
-                  )}
                 </div>
 
                 <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
@@ -737,7 +720,7 @@
 
               <div style={{ position: 'absolute', left: '-9999px', top: 0, zIndex: -1 }}>
                 <div ref={reportRef}>
-                  <PdfReportTemplate date={date} visitor={visitor} branch={branch} aspects={aspects} experiences={experiences} images={images} />
+                  <PdfReportTemplate date={date} visitor={visitor} branch={branch} aspects={aspects} experiences={experiences} />
                 </div>
               </div>
             </div>
