@@ -96,28 +96,28 @@
         let text = [];
         const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
 
-        if (speed <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Pelanggan merasa kecepatan internet sangat lambat dan sering mengganggu aktivitas online.</span>");
+        if (speed <= 2) text.push("<span style=\"color: red; font-weight: bold;\">Pelanggan merasa kecepatan internet sangat lambat dan sering mengganggu aktivitas online.</span>");
         else if (speed === 3) text.push("Kecepatan internet dirasa cukup baik, namun kadang melambat di jam tertentu.");
         else text.push("Kecepatan internet dinilai cepat dan memuaskan pelanggan.");
 
-        if (stability <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Koneksi sering tidak stabil atau terputus.</span>");
+        if (stability <= 2) text.push("<span style=\"color: red; font-weight: bold;\">Koneksi sering tidak stabil atau terputus.</span>");
         else if (stability === 3) text.push("Koneksi cukup stabil, meskipun kadang mengalami gangguan kecil.");
         else text.push("Koneksi internet sangat stabil tanpa gangguan berarti.");
 
-        if (support <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Layanan pelanggan dinilai lambat dan kurang membantu dalam menyelesaikan masalah.</span>");
+        if (support <= 2) text.push("<span style=\"color: red; font-weight: bold;\">Layanan pelanggan dinilai lambat dan kurang membantu dalam menyelesaikan masalah.</span>");
         else if (support === 3) text.push("Layanan pelanggan cukup responsif, meski masih bisa ditingkatkan.");
         else text.push("Layanan pelanggan cepat, ramah, dan sangat membantu.");
 
-        if (price <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Harga dianggap tidak sebanding dengan kualitas layanan yang diterima.</span>");
+        if (price <= 2) text.push("<span style=\"color: red; font-weight: bold;\">Harga dianggap tidak sebanding dengan kualitas layanan yang diterima.</span>");
         else if (price === 3) text.push("Harga dirasa cukup sebanding dengan kualitas yang diberikan.");
         else text.push("Harga dinilai sangat sepadan bahkan di bawah ekspektasi pelanggan.");
 
-        if (overall <= 2) text.push("<span style=\"font-weight: bold; color: red;\">Secara keseluruhan pelanggan merasa tidak puas dan membutuhkan peningkatan signifikan.</span>");
+        if (overall <= 2) text.push("<span style=\"color: red; font-weight: bold;\">Secara keseluruhan pelanggan merasa tidak puas dan membutuhkan peningkatan signifikan.</span>");
         else if (overall === 3) text.push("Secara umum pelanggan cukup puas namun berharap peningkatan di beberapa aspek.");
         else text.push("Pelanggan merasa sangat puas dan kemungkinan besar akan merekomendasikan layanan ini.");
 
         let tone = "";
-        if (avg <= 2.5) tone = "<span style=\"font-weight: bold; color: red;\">Kesimpulan: Tingkat kepuasan pelanggan sangat rendah. Disarankan dilakukan tindak lanjut segera oleh tim teknis dan customer care.</span>";
+        if (avg <= 2.5) tone = "<span style=\"color: red; font-weight: bold;\">Kesimpulan: Tingkat kepuasan pelanggan sangat rendah. Disarankan dilakukan tindak lanjut segera oleh tim teknis dan customer care.</span>";
         else if (avg < 4) tone = "Kesimpulan: Pelanggan cukup puas, namun ada beberapa aspek yang perlu perbaikan agar pengalaman lebih konsisten.";
         else tone = "Kesimpulan: Pelanggan sangat puas dengan layanan internet secara keseluruhan.";
 
@@ -280,6 +280,7 @@
         const videoRef = React.useRef(null);
         const canvasRef = React.useRef(null);
         const [isCameraOn, setIsCameraOn] = React.useState(false);
+        const [facingMode, setFacingMode] = React.useState('user'); // 'user' for front, 'environment' for back
 
         const addImage = (src) => onImagesChange([...images, { id: `img-${Date.now()}`, src }]);
         const removeImage = (id) => onImagesChange(images.filter(img => img.id !== id));
@@ -295,19 +296,45 @@
         const openCamera = async () => {
           setShowOptions(false);
           try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode } });
             if (videoRef.current) { videoRef.current.srcObject = stream; setIsCameraOn(true); }
           } catch (err) { console.error("Error accessing camera:", err); alert("Could not access camera. Please ensure permissions are granted."); }
         };
-        const takePicture = () => {
+        const takePicture = async () => {
           if (videoRef.current && canvasRef.current) {
             const context = canvasRef.current.getContext('2d');
             if (context) {
               canvasRef.current.width = videoRef.current.videoWidth;
               canvasRef.current.height = videoRef.current.videoHeight;
               context.drawImage(videoRef.current, 0, 0, videoRef.current.videoWidth, videoRef.current.videoHeight);
+
+              // Add geolocation and timestamp overlay
+              try {
+                const position = await new Promise((resolve, reject) => {
+                  navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 5000 });
+                });
+                const { latitude, longitude } = position.coords;
+                const timestamp = new Date().toLocaleString();
+
+                context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                context.fillRect(10, canvasRef.current.height - 60, canvasRef.current.width - 20, 50);
+                context.fillStyle = 'white';
+                context.font = '12px Arial';
+                context.fillText(`Date: ${timestamp}`, 20, canvasRef.current.height - 40);
+                context.fillText(`Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`, 20, canvasRef.current.height - 20);
+              } catch (error) {
+                console.warn('Could not get geolocation:', error);
+                // Add timestamp only if geolocation fails
+                const timestamp = new Date().toLocaleString();
+                context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                context.fillRect(10, canvasRef.current.height - 40, canvasRef.current.width - 20, 30);
+                context.fillStyle = 'white';
+                context.font = '12px Arial';
+                context.fillText(`Date: ${timestamp}`, 20, canvasRef.current.height - 20);
+              }
+
               addImage(canvasRef.current.toDataURL('image/png'));
-              closeCamera();
+              // Do not close camera automatically, allow multiple pictures
             }
           }
         };
@@ -317,16 +344,23 @@
           }
           setIsCameraOn(false);
         };
+        const flipCamera = async () => {
+          const newFacingMode = facingMode === 'user' ? 'environment' : 'user';
+          setFacingMode(newFacingMode);
+          closeCamera();
+          setTimeout(() => openCamera(), 100); // Reopen camera with new facing mode
+        };
 
         return (
           <section className="p-6 bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Image Visitation</h2>
             {isCameraOn && (
               <div className="mb-6">
-                <video ref={videoRef} autoPlay className="w-full rounded-xl mb-4 shadow-lg" />
+                <video ref={videoRef} autoPlay playsInline muted className="w-full rounded-xl mb-4 shadow-lg" />
                 <div className="flex justify-center space-x-4">
-                  <button onClick={takePicture} className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">Take Picture</button>
-                  <button onClick={closeCamera} className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">Close Camera</button>
+                  <button onClick={takePicture} className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">📸 Take Picture</button>
+                  <button onClick={flipCamera} className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">🔄 Flip Camera</button>
+                  <button onClick={closeCamera} className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-105 transform">❌ Close Camera</button>
                 </div>
                 <canvas ref={canvasRef} className="hidden" />
               </div>
@@ -349,6 +383,11 @@
               )}
               <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden"/>
             </div>
+            {isCameraOn && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-600 text-center">Camera is active. Use the controls above to take pictures.</p>
+              </div>
+            )}
           </section>
         );
       };
