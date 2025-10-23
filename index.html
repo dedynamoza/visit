@@ -96,28 +96,28 @@
         let text = [];
         const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
 
-        if (speed <= 2) text.push("<strong>Pelanggan merasa kecepatan internet sangat lambat dan sering mengganggu aktivitas online.</strong>");
+        if (speed <= 2) text.push("<b>Pelanggan merasa kecepatan internet sangat lambat dan sering mengganggu aktivitas online.</b>");
         else if (speed === 3) text.push("Kecepatan internet dirasa cukup baik, namun kadang melambat di jam tertentu.");
         else text.push("Kecepatan internet dinilai cepat dan memuaskan pelanggan.");
 
-        if (stability <= 2) text.push("<strong>Koneksi sering tidak stabil atau terputus.</strong>");
+        if (stability <= 2) text.push("<b>Koneksi sering tidak stabil atau terputus.</b>");
         else if (stability === 3) text.push("Koneksi cukup stabil, meskipun kadang mengalami gangguan kecil.");
         else text.push("Koneksi internet sangat stabil tanpa gangguan berarti.");
 
-        if (support <= 2) text.push("<strong>Layanan pelanggan dinilai lambat dan kurang membantu dalam menyelesaikan masalah.</strong>");
+        if (support <= 2) text.push("<b>Layanan pelanggan dinilai lambat dan kurang membantu dalam menyelesaikan masalah.</b>");
         else if (support === 3) text.push("Layanan pelanggan cukup responsif, meski masih bisa ditingkatkan.");
         else text.push("Layanan pelanggan cepat, ramah, dan sangat membantu.");
 
-        if (price <= 2) text.push("<strong>Harga dianggap tidak sebanding dengan kualitas layanan yang diterima.</strong>");
+        if (price <= 2) text.push("<b>Harga dianggap tidak sebanding dengan kualitas layanan yang diterima.</b>");
         else if (price === 3) text.push("Harga dirasa cukup sebanding dengan kualitas yang diberikan.");
         else text.push("Harga dinilai sangat sepadan bahkan di bawah ekspektasi pelanggan.");
 
-        if (overall <= 2) text.push("<strong>Secara keseluruhan pelanggan merasa tidak puas dan membutuhkan peningkatan signifikan.</strong>");
+        if (overall <= 2) text.push("<b>Secara keseluruhan pelanggan merasa tidak puas dan membutuhkan peningkatan signifikan.</b>");
         else if (overall === 3) text.push("Secara umum pelanggan cukup puas namun berharap peningkatan di beberapa aspek.");
         else text.push("Pelanggan merasa sangat puas dan kemungkinan besar akan merekomendasikan layanan ini.");
 
         let tone = "";
-        if (avg <= 2.5) tone = "<strong>Kesimpulan: Tingkat kepuasan pelanggan sangat rendah. Disarankan dilakukan tindak lanjut segera oleh tim teknis dan customer care.</strong>";
+        if (avg <= 2.5) tone = "<b>Kesimpulan: Tingkat kepuasan pelanggan sangat rendah. Disarankan dilakukan tindak lanjut segera oleh tim teknis dan customer care.</b>";
         else if (avg < 4) tone = "Kesimpulan: Pelanggan cukup puas, namun ada beberapa aspek yang perlu perbaikan agar pengalaman lebih konsisten.";
         else tone = "Kesimpulan: Pelanggan sangat puas dengan layanan internet secara keseluruhan.";
 
@@ -358,67 +358,70 @@
                     <p><strong>Branch&nbsp;&nbsp;&nbsp;:</strong> {branch}</p>
                 </div>
 
-                <table style={{ width: '100%', borderCollapse: 'collapse', border: '2px solid black', marginBottom: '20px' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid black', marginBottom: '20px' }}>
                     <thead>
                         <tr>
-                            <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>Aspect</th>
-                            <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>Need Improvment</th>
-                            <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>No Need</th>
-                            <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>Description</th>
+                            <th style={{ border: '1px solid black', padding: '4px', textAlign: 'center', fontWeight: 'bold' }}>Aspect</th>
+                            <th style={{ border: '1px solid black', padding: '4px', textAlign: 'center', fontWeight: 'bold' }}>Need Improvment</th>
+                            <th style={{ border: '1px solid black', padding: '4px', textAlign: 'center', fontWeight: 'bold' }}>No Need</th>
+                            <th style={{ border: '1px solid black', padding: '4px', textAlign: 'center', fontWeight: 'bold' }}>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         {aspects.map(aspect => (
                             <tr key={aspect.id}>
-                                <td style={{ border: '1px solid black', padding: '8px' }}>{aspect.title}</td>
-                                <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center', fontSize: '1.2em', color: '#008000' }}>{aspect.status === AspectStatus.NEED_IMPROVEMENT ? '✓' : ''}</td>
-                                <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center', fontSize: '1.2em', color: '#008000' }}>{aspect.status === AspectStatus.NO_NEED ? '✓' : ''}</td>
-                                <td style={{ border: '1px solid black', padding: '8px' }}>{aspect.status === AspectStatus.NEED_IMPROVEMENT ? aspect.description : 'null'}</td>
+                                <td style={{ border: '1px solid black', padding: '4px' }}>{aspect.title}</td>
+                                <td style={{ border: '1px solid black', padding: '4px', textAlign: 'center', fontSize: '1.2em', color: '#008000' }}>{aspect.status === AspectStatus.NEED_IMPROVEMENT ? '✓' : ''}</td>
+                                <td style={{ border: '1px solid black', padding: '4px', textAlign: 'center', fontSize: '1.2em', color: '#008000' }}>{aspect.status === AspectStatus.NO_NEED ? '✓' : ''}</td>
+                                <td style={{ border: '1px solid black', padding: '4px' }}>{aspect.status === AspectStatus.NEED_IMPROVEMENT ? aspect.description : 'null'}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-                
+
                 {experiences.map((exp, index) => (
-                    <table key={exp.id} style={{ width: '100%', borderCollapse: 'collapse', border: '2px solid black', marginBottom: '20px' }}>
+                    <table key={exp.id} style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid black', marginBottom: '20px' }}>
                         <thead>
                             <tr>
-                                <th colSpan="3" style={{ border: '1px solid black', padding: '8px', textAlign: 'left', fontWeight: 'bold' }}>Customer Experience</th>
+                                <th colSpan="3" style={{ border: '1px solid black', padding: '4px', textAlign: 'left', fontWeight: 'bold' }}>Customer Experience</th>
                             </tr>
                             <tr>
-                                <th style={{ borderBottom: '2px solid black', padding: '8px', width: '35%' }}></th>
-                                <th style={{ borderBottom: '2px solid black', padding: '8px', textAlign: 'center', width: '30%', fontWeight: 'bold' }}>Star</th>
-                                <th style={{ borderBottom: '2px solid black', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>Summary</th>
+                                <th style={{ borderBottom: '1px solid black', padding: '4px', width: '35%' }}></th>
+                                <th style={{ borderBottom: '1px solid black', padding: '4px', textAlign: 'center', width: '30%', fontWeight: 'bold' }}></th>
+                                <th style={{ borderBottom: '1px solid black', padding: '4px', textAlign: 'center', fontWeight: 'bold' }}></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colSpan="3" style={{ border: '1px solid black', padding: '8px', fontWeight: 'bold' }}>Billing Account: {exp.billingAccount}</td>
+                                <td colSpan="3" style={{ border: '1px solid black', padding: '4px', fontWeight: 'bold' }}>Billing Account: {exp.billingAccount}</td>
                             </tr>
                             <tr>
-                                <td colSpan="3" style={{ border: '1px solid black', padding: '8px', fontWeight: 'bold' }}>Customer Name: {exp.name}</td>
+                                <td colSpan="3" style={{ border: '1px solid black', padding: '4px', fontWeight: 'bold' }}>Customer Name: {exp.name}</td>
                             </tr>
                             <tr>
-                                <td style={{ border: '1px solid black', padding: '8px' }}>Kecepatan Internet</td>
-                                <td style={{ border: '1px solid black', padding: '8px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.speed)}</td>
-                                <td style={{ border: '1px solid black', padding: '8px', verticalAlign: 'top', textAlign: 'left' }} rowSpan="5">{exp.summary}</td>
+                                <td colSpan="3" style={{ border: '1px solid black', padding: '4px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', pageBreakInside: 'avoid' }}>
+                                        {images.map(img => (
+                                            <div key={img.id}>
+                                                <p style={{marginBottom: '5px', fontWeight: 'bold'}}>Image Visitation</p>
+                                                <img src={img.src} alt="Visitation" style={{ width: '100px', height: 'auto', border: '1px solid #CCC' }}/>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </td>
                             </tr>
-                            <tr><td style={{ border: '1px solid black', padding: '8px' }}>Kestabilan Koneksi</td><td style={{ border: '1px solid black', padding: '8px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.stability)}</td></tr>
-                            <tr><td style={{ border: '1px solid black', padding: '8px' }}>Layanan Pelanggan</td><td style={{ border: '1px solid black', padding: '8px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.support)}</td></tr>
-                            <tr><td style={{ border: '1px solid black', padding: '8px' }}>Harga dan Kesesuaian Layanan</td><td style={{ border: '1px solid black', padding: '8px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.price)}</td></tr>
-                            <tr><td style={{ border: '1px solid black', padding: '8px' }}>Kepuasan Keseluruhan</td><td style={{ border: '1px solid black', padding: '8px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.overall)}</td></tr>
+                            <tr>
+                                <td style={{ border: '1px solid black', padding: '4px' }}>Kecepatan Internet</td>
+                                <td style={{ border: '1px solid black', padding: '4px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.speed)}</td>
+                                <td style={{ border: '1px solid black', padding: '4px', verticalAlign: 'top', textAlign: 'left' }} rowSpan="5">{exp.summary}</td>
+                            </tr>
+                            <tr><td style={{ border: '1px solid black', padding: '4px' }}>Kestabilan Koneksi</td><td style={{ border: '1px solid black', padding: '4px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.stability)}</td></tr>
+                            <tr><td style={{ border: '1px solid black', padding: '4px' }}>Layanan Pelanggan</td><td style={{ border: '1px solid black', padding: '4px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.support)}</td></tr>
+                            <tr><td style={{ border: '1px solid black', padding: '4px' }}>Harga dan Kesesuaian Layanan</td><td style={{ border: '1px solid black', padding: '4px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.price)}</td></tr>
+                            <tr><td style={{ border: '1px solid black', padding: '4px' }}>Kepuasan Keseluruhan</td><td style={{ border: '1px solid black', padding: '4px', fontSize: '1.5em', color: '#FFC107', textAlign: 'center' }}>{renderStars(exp.ratings.overall)}</td></tr>
                         </tbody>
                     </table>
                 ))}
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', pageBreakInside: 'avoid' }}>
-                    {images.map(img => (
-                        <div key={img.id}>
-                            <p style={{marginBottom: '5px', fontWeight: 'bold'}}>Image Visitation</p>
-                            <img src={img.src} alt="Visitation" style={{ width: '100px', height: 'auto', border: '1px solid #CCC' }}/>
-                        </div>
-                    ))}
-                </div>
 
                 <div style={{ position: 'absolute', bottom: '20px', right: '40px', fontSize: '0.8em', color: '#555' }}>
                     Documment by West Territory 4
@@ -485,6 +488,36 @@
         const [activeTab, setActiveTab] = useState('basic');
         const [showSuccessPopup, setShowSuccessPopup] = useState(false);
         const reportRef = useRef(null);
+
+        const isTabComplete = (tabId) => {
+          switch (tabId) {
+            case 'basic':
+              return date && visitor && branch;
+            case 'aspects':
+              return aspects.every(a => a.status !== AspectStatus.UNSELECTED);
+            case 'experience':
+              return experiences.every(e => e.billingAccount && e.name && Object.values(e.ratings).every(r => r > 0));
+            case 'images':
+              return images.length > 0;
+            default:
+              return false;
+          }
+        };
+
+        const getNextTab = (currentTab) => {
+          const tabsOrder = ['basic', 'aspects', 'experience', 'images'];
+          const currentIndex = tabsOrder.indexOf(currentTab);
+          return currentIndex < tabsOrder.length - 1 ? tabsOrder[currentIndex + 1] : null;
+        };
+
+        useEffect(() => {
+          if (activeTab === 'basic' && isTabComplete(activeTab)) {
+            const nextTab = getNextTab(activeTab);
+            if (nextTab) {
+              setActiveTab(nextTab);
+            }
+          }
+        }, [date, visitor, branch, aspects, experiences, images, activeTab]);
 
         const handleAspectChange = useCallback((updatedAspect) => {
           setAspects(prev => prev.map(a => a.id === updatedAspect.id ? updatedAspect : a));
@@ -564,11 +597,23 @@
               pdf.save(`Visitation_Report_${branch.replace(/\s/g, '_')}_${date}.pdf`);
 
               const subject = `Visitation Report: ${branch} - ${date}`;
-              const body = `Dear Pak Dedi,\n\nTerlampir report kunjungan saya ke ${branch} yang dilakukan pada ${date} oleh ${visitor}.\n\nBest regards.`;
+              const body = `Dear Pak Dedi,\n\nTerlampir report kunjungan ke ${branch} yang dilakukan pada ${date} oleh ${visitor}.\n\nBest regards.`;
               window.location.href = `mailto:dedi_riyanto@biznetnetworks.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
               setShowSuccessPopup(true);
-              setTimeout(() => setShowSuccessPopup(false), 3000);
+              setTimeout(() => {
+                setShowSuccessPopup(false);
+                // Reset form to initial state
+                setDate(new Date().toISOString().split('T')[0]);
+                setVisitor('');
+                setBranch('');
+                setAspects(initialAspects);
+                setExperiences([]);
+                setImages([]);
+                setActiveTab('basic');
+                // Add initial experience
+                addExperience();
+              }, 3000);
 
             } catch (error) { console.error("Error generating PDF:", error); alert("Failed to generate PDF. Please try again."); }
           }
